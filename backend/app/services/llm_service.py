@@ -1,14 +1,19 @@
-"""Construction of the prompt sent to the LLM (prompt building only, no inference)."""
+"""Prompt construction and grounded answer generation for the LLM."""
 
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+
+import anthropic
 
 from app.services.retrieval_service import RetrievedChunk
 
 PROMPTS_DIR = Path(__file__).resolve().parents[1] / "prompts"
 SYSTEM_PROMPT_FILE = PROMPTS_DIR / "system_prompt.txt"
 QA_PROMPT_FILE = PROMPTS_DIR / "qa_prompt.txt"
+
+LLM_MODEL = "claude-opus-4-8"
+LLM_MAX_TOKENS = 2048
 
 
 @dataclass
@@ -39,3 +44,25 @@ def _format_context(chunks: list[RetrievedChunk]) -> str:
 def _load_template(path: Path) -> str:
     """Load and cache a prompt template from disk."""
     return path.read_text(encoding="utf-8").strip()
+
+
+def generate_answer(prompt: Prompt) -> str:
+    """Send the prepared prompt to the configured LLM and return only the answer text.
+
+    The prompt instructs the model to answer solely from the provided context and to
+    state when the information is unavailable, so insufficient context is handled by
+    the model rather than special-cased here.
+    """
+    message = _get_client().messages.create(
+        model=LLM_MODEL,
+        max_tokens=LLM_MAX_TOKENS,
+        system=prompt.system,
+        messages=[{"role": "user", "content": prompt.user}],
+    )
+    return "".join(block.text for block in message.content if block.type == "text").strip()
+
+
+@lru_cache
+def _get_client() -> anthropic.Anthropic:
+    """Return a cached Anthropic client (credentials are resolved from the environment)."""
+    return anthropic.Anthropic()
