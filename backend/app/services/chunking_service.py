@@ -2,11 +2,19 @@
 
 from dataclasses import dataclass
 
-from app.services.document_pipeline import ProcessedDocument
+from app.services.pdf_service import ExtractedDocument
 from app.utils.text_utils import normalize_whitespace, split_text
 
 DEFAULT_CHUNK_SIZE = 1000
 DEFAULT_CHUNK_OVERLAP = 200
+
+
+@dataclass
+class ProcessedDocument:
+    """Extracted text content paired with its source filename (the chunker's input)."""
+
+    filename: str
+    document: ExtractedDocument
 
 
 @dataclass
