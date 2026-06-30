@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment
+.env
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+
+# Runtime storage
+backend/storage/uploads/*
+backend/storage/processed/*
+backend/storage/chroma/*
+
+# Keep folder structure
+!backend/storage/uploads/.gitkeep
+!backend/storage/processed/.gitkeep
+!backend/storage/chroma/.gitkeep
