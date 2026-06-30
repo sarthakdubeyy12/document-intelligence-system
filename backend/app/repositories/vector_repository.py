@@ -29,3 +29,26 @@ def get_client() -> chromadb.ClientAPI:
 def get_collection() -> chromadb.Collection:
     """Return the document collection, creating it on first use."""
     return get_client().get_or_create_collection(name=COLLECTION_NAME)
+
+
+def get_existing_ids(ids: list[str]) -> set[str]:
+    """Return the subset of the given ids that are already stored."""
+    if not ids:
+        return set()
+    found = get_collection().get(ids=ids, include=[])
+    return set(found["ids"])
+
+
+def add_embeddings(
+    ids: list[str],
+    embeddings: list[list[float]],
+    metadatas: list[dict],
+    documents: list[str],
+) -> None:
+    """Add embedding vectors with their documents and metadata to the collection."""
+    get_collection().add(
+        ids=ids,
+        embeddings=embeddings,
+        metadatas=metadatas,
+        documents=documents,
+    )
