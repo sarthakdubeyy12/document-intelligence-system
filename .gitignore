@@ -23,3 +23,13 @@ backend/storage/chroma/*
 !backend/storage/uploads/.gitkeep
 !backend/storage/processed/.gitkeep
 !backend/storage/chroma/.gitkeep
+
+# Storage
+backend/storage/uploads/*
+backend/storage/processed/*
+backend/storage/chroma/*
+
+# Keep directories
+!backend/storage/uploads/.gitkeep
+!backend/storage/processed/.gitkeep
+!backend/storage/chroma/.gitkeep
