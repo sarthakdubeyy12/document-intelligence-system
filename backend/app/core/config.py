@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     app_description: str = "Backend API for document intelligence and retrieval."
 
+    embedding_model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
