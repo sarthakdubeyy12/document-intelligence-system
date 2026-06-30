@@ -72,6 +72,11 @@ def embed_chunks(
     return embedded
 
 
+def embed_query(text: str) -> list[float]:
+    """Generate an embedding for a single query string."""
+    return _embed_texts([text], get_embedding_model())[0]
+
+
 def _embed_texts(texts: list[str], model: EmbeddingModel) -> list[list[float]]:
     """Embed a batch of texts into normalized, mean-pooled sentence vectors."""
     tokens = model.tokenizer(texts, padding=True, truncation=True, return_tensors="pt")

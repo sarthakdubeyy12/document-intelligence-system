@@ -52,3 +52,26 @@ def add_embeddings(
         metadatas=metadatas,
         documents=documents,
     )
+
+
+def query_similar(embedding: list[float], top_k: int) -> list[dict]:
+    """Return up to ``top_k`` stored chunks most similar to ``embedding``.
+
+    Each record holds the chunk's id, text, metadata, and raw vector distance,
+    hiding ChromaDB's nested result shape from callers.
+    """
+    result = get_collection().query(
+        query_embeddings=[embedding],
+        n_results=top_k,
+        include=["documents", "metadatas", "distances"],
+    )
+    # A single query embedding yields one nested list per field.
+    return [
+        {"id": chunk_id, "text": text, "metadata": metadata, "distance": distance}
+        for chunk_id, text, metadata, distance in zip(
+            result["ids"][0],
+            result["documents"][0],
+            result["metadatas"][0],
+            result["distances"][0],
+        )
+    ]
