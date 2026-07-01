@@ -1,65 +1,75 @@
-import Image from "next/image";
+"use client";
+import WavyBackground from "@/components/background/WavyBackground";
+import UploadSection from "@/components/upload/UploadSection";
+import ChatSection from "@/components/chat/ChatSection";
+import AnswerCard from "@/components/chat/AnswerCard";
+import CitationList from "@/components/chat/CitationList";
+import Footer from "@/components/common/Footer";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="w-full">
+      {/* Home Section - Full Screen with Wavy Background */}
+      <div className="w-full h-screen relative overflow-hidden">
+        <WavyBackground className="w-full h-full flex flex-col items-center justify-center">
+          <div className="relative z-10 px-4 text-center max-w-3xl">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white">
+              Document Intelligence System
+            </h1>
+            <p className="mt-6 text-base sm:text-lg md:text-xl text-white/90 leading-relaxed">
+              Upload one or more PDF documents, ask questions in natural language, and receive grounded answers with citations.
+            </p>
+          </div>
+        </WavyBackground>
+      </div>
+
+      {/* Upload Section */}
+      <section id="upload" className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center px-4 py-20 relative z-20">
+        <div className="max-w-4xl w-full">
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-500 dark:text-blue-400 mb-3">
+              Step 1
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+              Upload Documents
+            </h2>
+          </div>
+          <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-12">
+            Start by uploading your documents. Then ask questions and get instant answers with citations.
           </p>
+          <UploadSection />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Ask Questions Section */}
+      <section id="ask" className="w-full min-h-screen bg-white dark:bg-gray-800 flex flex-col items-center justify-center px-4 py-20 relative z-20">
+        <div className="max-w-4xl w-full">
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-500 dark:text-blue-400 mb-3">
+              Step 2
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+              Ask Questions
+            </h2>
+          </div>
+
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Chat Section */}
+            <div className="lg:col-span-1">
+              <ChatSection />
+            </div>
+
+            {/* Right Column - Answer and Citations */}
+            <div className="lg:col-span-2 space-y-8">
+              <AnswerCard />
+              <CitationList />
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
+
+      <Footer />
     </div>
   );
 }
