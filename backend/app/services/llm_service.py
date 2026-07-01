@@ -1,18 +1,23 @@
 """Prompt construction and grounded answer generation for the LLM."""
 
+import os
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
-import anthropic
+from dotenv import load_dotenv
+from groq import APIError, Groq
 
+from app.core.config import get_settings
 from app.services.retrieval_service import RetrievedChunk
 
 PROMPTS_DIR = Path(__file__).resolve().parents[1] / "prompts"
 SYSTEM_PROMPT_FILE = PROMPTS_DIR / "system_prompt.txt"
 QA_PROMPT_FILE = PROMPTS_DIR / "qa_prompt.txt"
+ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
-LLM_MODEL = "claude-opus-4-8"
+load_dotenv(ENV_FILE)
+
 LLM_MAX_TOKENS = 2048
 
 
@@ -53,16 +58,26 @@ def generate_answer(prompt: Prompt) -> str:
     state when the information is unavailable, so insufficient context is handled by
     the model rather than special-cased here.
     """
-    message = _get_client().messages.create(
-        model=LLM_MODEL,
-        max_tokens=LLM_MAX_TOKENS,
-        system=prompt.system,
-        messages=[{"role": "user", "content": prompt.user}],
-    )
-    return "".join(block.text for block in message.content if block.type == "text").strip()
+    try:
+        completion = _get_client().chat.completions.create(
+            model=get_settings().llm_model,
+            max_tokens=LLM_MAX_TOKENS,
+            messages=[
+                {"role": "system", "content": prompt.system},
+                {"role": "user", "content": prompt.user},
+            ],
+        )
+    except APIError as exc:
+        raise RuntimeError(f"Language model request failed: {exc}") from exc
+    return (completion.choices[0].message.content or "").strip()
 
 
 @lru_cache
-def _get_client() -> anthropic.Anthropic:
-    """Return a cached Anthropic client (credentials are resolved from the environment)."""
-    return anthropic.Anthropic()
+def _get_client() -> Groq:
+    """Return a cached Groq client, reading the API key from the environment."""
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "Groq API key is not configured. Set GROQ_API_KEY in backend/.env."
+        )
+    return Groq(api_key=api_key)

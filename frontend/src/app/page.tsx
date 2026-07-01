@@ -1,12 +1,33 @@
 "use client";
+
 import WavyBackground from "@/components/background/WavyBackground";
 import UploadSection from "@/components/upload/UploadSection";
 import ChatSection from "@/components/chat/ChatSection";
 import AnswerCard from "@/components/chat/AnswerCard";
 import CitationList from "@/components/chat/CitationList";
 import Footer from "@/components/common/Footer";
+import { useChat } from "@/hooks/useChat";
+import { useUpload } from "@/hooks/useUpload";
 
 export default function Home() {
+  const {
+    uploadFiles,
+    uploadStatus,
+    isUploading,
+    uploadSummary,
+    error: uploadError,
+  } = useUpload();
+
+  const {
+    question,
+    setQuestion,
+    answer,
+    citations,
+    isAsking,
+    error: chatError,
+    askQuestion,
+  } = useChat();
+
   return (
     <div className="w-full">
       {/* Home Section - Full Screen with Wavy Background */}
@@ -37,7 +58,13 @@ export default function Home() {
           <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-12">
             Start by uploading your documents. Then ask questions and get instant answers with citations.
           </p>
-          <UploadSection />
+          <UploadSection
+            uploadStatus={uploadStatus}
+            isUploading={isUploading}
+            uploadSummary={uploadSummary}
+            error={uploadError}
+            onUpload={uploadFiles}
+          />
         </div>
       </section>
 
@@ -57,13 +84,19 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Chat Section */}
             <div className="lg:col-span-1">
-              <ChatSection />
+              <ChatSection
+                question={question}
+                onQuestionChange={setQuestion}
+                onAsk={askQuestion}
+                isLoading={isAsking}
+                error={chatError}
+              />
             </div>
 
             {/* Right Column - Answer and Citations */}
             <div className="lg:col-span-2 space-y-8">
-              <AnswerCard />
-              <CitationList />
+              <AnswerCard answer={answer} isLoading={isAsking} error={chatError} />
+              <CitationList citations={citations} />
             </div>
           </div>
         </div>

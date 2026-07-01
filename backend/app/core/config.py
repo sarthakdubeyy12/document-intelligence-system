@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     app_description: str = "Backend API for document intelligence and retrieval."
 
     embedding_model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
+    llm_model: str = "llama-3.3-70b-versatile"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
