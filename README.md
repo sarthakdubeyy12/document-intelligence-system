@@ -24,6 +24,12 @@ Query:      Question → Embed → Retrieve top-k chunks → Build prompt → LL
 
 Each stage is an isolated service; a thin orchestration layer sequences them, and the API routes stay thin by delegating to the service layer.
 
+## Optimization Choice
+
+**This implementation is optimized for accuracy.**
+
+The focus was on retrieving the most relevant document context before generating an answer. The system uses recursive chunking, semantic embeddings, ChromaDB vector search, and grounded answer generation with citations. This approach prioritizes answer quality and traceability over minimizing response latency.
+
 ## Tech Stack
 
 | Layer        | Technology                                              |
