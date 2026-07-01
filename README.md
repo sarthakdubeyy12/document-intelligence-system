@@ -1,5 +1,9 @@
 # Document Intelligence System
 
+## Note
+
+This project was implemented entirely by me. Some early commits may appear under a different GitHub contributor due to an initial Git identity configuration on the shared development environment. This was corrected for subsequent commits.
+
 Upload PDF documents, ask questions in natural language, and receive grounded answers with citations. The system runs a retrieval-augmented generation (RAG) pipeline: documents are parsed, chunked, embedded, and stored in a vector database, then relevant passages are retrieved to ground the language model's answer.
 
 ## Features
